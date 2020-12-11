@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增交换')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-exchange-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">格子编码：</label>
+                <div class="col-sm-8">
+                    <input name="exchangeBoxCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">发起交换的人员ID：</label>
+                <div class="col-sm-8">
+                    <input name="exchangeUserId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">物品名称：</label>
+                <div class="col-sm-8">
+                    <input name="exchangeGoods" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">随机码：</label>
+                <div class="col-sm-8">
+                    <input name="exchangeRandomcode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">交换次数限制：</label>
+                <div class="col-sm-8">
+                    <input name="exchangeTimesLimit" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">剩余开启次数：</label>
+                <div class="col-sm-8">
+                    <input name="exchangeCount" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "locker/exchange"
+        $("#form-exchange-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-exchange-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

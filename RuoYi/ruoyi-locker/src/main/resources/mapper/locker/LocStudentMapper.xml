@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocStudentMapper">
+    
+    <resultMap type="LocStudent" id="LocStudentResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="studentCollege"    column="student_college"    />
+        <result property="studentMajor"    column="student_major"    />
+        <result property="studentClass"    column="student_class"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="studentPhone"    column="student_phone"    />
+    </resultMap>
+
+    <sql id="selectLocStudentVo">
+        select id, student_id, student_college, student_major, student_class, student_name, student_phone from loc_student
+    </sql>
+
+    <select id="selectLocStudentList" parameterType="LocStudent" resultMap="LocStudentResult">
+        <include refid="selectLocStudentVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="studentCollege != null  and studentCollege != ''"> and student_college = #{studentCollege}</if>
+            <if test="studentMajor != null  and studentMajor != ''"> and student_major = #{studentMajor}</if>
+            <if test="studentClass != null  and studentClass != ''"> and student_class = #{studentClass}</if>
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="studentPhone != null  and studentPhone != ''"> and student_phone = #{studentPhone}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocStudentById" parameterType="Integer" resultMap="LocStudentResult">
+        <include refid="selectLocStudentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLocStudent" parameterType="LocStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into loc_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="studentCollege != null">student_college,</if>
+            <if test="studentMajor != null">student_major,</if>
+            <if test="studentClass != null">student_class,</if>
+            <if test="studentName != null">student_name,</if>
+            <if test="studentPhone != null">student_phone,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="studentCollege != null">#{studentCollege},</if>
+            <if test="studentMajor != null">#{studentMajor},</if>
+            <if test="studentClass != null">#{studentClass},</if>
+            <if test="studentName != null">#{studentName},</if>
+            <if test="studentPhone != null">#{studentPhone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocStudent" parameterType="LocStudent">
+        update loc_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="studentCollege != null">student_college = #{studentCollege},</if>
+            <if test="studentMajor != null">student_major = #{studentMajor},</if>
+            <if test="studentClass != null">student_class = #{studentClass},</if>
+            <if test="studentName != null">student_name = #{studentName},</if>
+            <if test="studentPhone != null">student_phone = #{studentPhone},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLocStudentById" parameterType="Integer">
+        delete from loc_student where id = #{id}
+    </delete>
+
+    <delete id="deleteLocStudentByIds" parameterType="String">
+        delete from loc_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

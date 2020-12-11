@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocUserMapper">
+    
+    <resultMap type="LocUser" id="LocUserResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userType"    column="user_type"    />
+        <result property="openId"    column="open_id"    />
+    </resultMap>
+
+    <sql id="selectLocUserVo">
+        select id, user_id, user_name, user_type, open_id from loc_user
+    </sql>
+
+    <select id="selectLocUserList" parameterType="LocUser" resultMap="LocUserResult">
+        <include refid="selectLocUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userType != null "> and user_type = #{userType}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocUserById" parameterType="Integer" resultMap="LocUserResult">
+        <include refid="selectLocUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLocUser" parameterType="LocUser" useGeneratedKeys="true" keyProperty="id">
+        insert into loc_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userType != null">user_type,</if>
+            <if test="openId != null">open_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userType != null">#{userType},</if>
+            <if test="openId != null">#{openId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocUser" parameterType="LocUser">
+        update loc_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+            <if test="openId != null">open_id = #{openId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLocUserById" parameterType="Integer">
+        delete from loc_user where id = #{id}
+    </delete>
+
+    <delete id="deleteLocUserByIds" parameterType="String">
+        delete from loc_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

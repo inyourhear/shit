@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocCollegeruleMapper">
+    
+    <resultMap type="LocCollegerule" id="LocCollegeruleResult">
+        <result property="collegeruleId"    column="collegerule_id"    />
+        <result property="collegeruleCollege"    column="collegerule_college"    />
+    </resultMap>
+
+    <sql id="selectLocCollegeruleVo">
+        select collegerule_id, collegerule_college from loc_collegerule
+    </sql>
+
+    <select id="selectLocCollegeruleList" parameterType="LocCollegerule" resultMap="LocCollegeruleResult">
+        <include refid="selectLocCollegeruleVo"/>
+        <where>  
+            <if test="collegeruleId != null "> and collegerule_id = #{collegeruleId}</if>
+            <if test="collegeruleCollege != null  and collegeruleCollege != ''"> and collegerule_college = #{collegeruleCollege}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocCollegeruleById" parameterType="Integer" resultMap="LocCollegeruleResult">
+        <include refid="selectLocCollegeruleVo"/>
+        where collegerule_id = #{collegeruleId}
+    </select>
+        
+    <insert id="insertLocCollegerule" parameterType="LocCollegerule" useGeneratedKeys="true" keyProperty="collegeruleId">
+        insert into loc_collegerule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="collegeruleCollege != null">collegerule_college,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="collegeruleCollege != null">#{collegeruleCollege},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocCollegerule" parameterType="LocCollegerule">
+        update loc_collegerule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="collegeruleCollege != null">collegerule_college = #{collegeruleCollege},</if>
+        </trim>
+        where collegerule_id = #{collegeruleId}
+    </update>
+
+    <delete id="deleteLocCollegeruleById" parameterType="Integer">
+        delete from loc_collegerule where collegerule_id = #{collegeruleId}
+    </delete>
+
+    <delete id="deleteLocCollegeruleByIds" parameterType="String">
+        delete from loc_collegerule where collegerule_id in 
+        <foreach item="collegeruleId" collection="array" open="(" separator="," close=")">
+            #{collegeruleId}
+        </foreach>
+    </delete>
+
+</mapper>

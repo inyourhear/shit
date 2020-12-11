@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改格子开放范围信')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-openscope-edit" th:object="${locOpenscope}">
+            <input name="openscopeId" th:field="*{openscopeId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">格子编码：</label>
+                <div class="col-sm-8">
+                    <input name="openscopeBoxCode" th:field="*{openscopeBoxCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">规则表ID：</label>
+                <div class="col-sm-8">
+                    <input name="openscopeRuletableId" th:field="*{openscopeRuletableId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">规则ID：</label>
+                <div class="col-sm-8">
+                    <input name="openscopeRuleId" th:field="*{openscopeRuleId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">是否失效(0有效，1失效）：</label>
+                <div class="col-sm-8">
+                    <textarea name="openscopeInvalid" class="form-control">[[*{openscopeInvalid}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "locker/openscope";
+        $("#form-openscope-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-openscope-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

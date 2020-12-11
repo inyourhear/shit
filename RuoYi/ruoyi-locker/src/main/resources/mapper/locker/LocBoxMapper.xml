@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocBoxMapper">
+    
+    <resultMap type="LocBox" id="LocBoxResult">
+        <result property="boxContainerId"    column="box_container_id"    />
+        <result property="boxCode"    column="box_code"    />
+        <result property="boxPortId"    column="box_port_id"    />
+        <result property="boxState"    column="box_state"    />
+        <result property="boxType"    column="box_type"    />
+        <result property="boxUserId"    column="box_user_id"    />
+    </resultMap>
+
+    <sql id="selectLocBoxVo">
+        select box_container_id, box_code, box_port_id, box_state, box_type, box_user_id from loc_box
+    </sql>
+
+    <select id="selectLocBoxList" parameterType="LocBox" resultMap="LocBoxResult">
+        <include refid="selectLocBoxVo"/>
+        <where>  
+            <if test="boxContainerId != null "> and box_container_id = #{boxContainerId}</if>
+            <if test="boxCode != null  and boxCode != ''"> and box_code = #{boxCode}</if>
+            <if test="boxPortId != null "> and box_port_id = #{boxPortId}</if>
+            <if test="boxState != null "> and box_state = #{boxState}</if>
+            <if test="boxType != null "> and box_type = #{boxType}</if>
+            <if test="boxUserId != null "> and box_user_id = #{boxUserId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocBoxById" parameterType="String" resultMap="LocBoxResult">
+        <include refid="selectLocBoxVo"/>
+        where box_code = #{boxCode}
+    </select>
+        
+    <insert id="insertLocBox" parameterType="LocBox">
+        insert into loc_box
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="boxContainerId != null">box_container_id,</if>
+            <if test="boxCode != null">box_code,</if>
+            <if test="boxPortId != null">box_port_id,</if>
+            <if test="boxState != null">box_state,</if>
+            <if test="boxType != null">box_type,</if>
+            <if test="boxUserId != null">box_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="boxContainerId != null">#{boxContainerId},</if>
+            <if test="boxCode != null">#{boxCode},</if>
+            <if test="boxPortId != null">#{boxPortId},</if>
+            <if test="boxState != null">#{boxState},</if>
+            <if test="boxType != null">#{boxType},</if>
+            <if test="boxUserId != null">#{boxUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocBox" parameterType="LocBox">
+        update loc_box
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="boxContainerId != null">box_container_id = #{boxContainerId},</if>
+            <if test="boxPortId != null">box_port_id = #{boxPortId},</if>
+            <if test="boxState != null">box_state = #{boxState},</if>
+            <if test="boxType != null">box_type = #{boxType},</if>
+            <if test="boxUserId != null">box_user_id = #{boxUserId},</if>
+        </trim>
+        where box_code = #{boxCode}
+    </update>
+
+    <delete id="deleteLocBoxById" parameterType="String">
+        delete from loc_box where box_code = #{boxCode}
+    </delete>
+
+    <delete id="deleteLocBoxByIds" parameterType="String">
+        delete from loc_box where box_code in 
+        <foreach item="boxCode" collection="array" open="(" separator="," close=")">
+            #{boxCode}
+        </foreach>
+    </delete>
+
+</mapper>

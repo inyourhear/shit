@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocContainerMapper">
+    
+    <resultMap type="LocContainer" id="LocContainerResult">
+        <result property="containerId"    column="container_id"    />
+        <result property="containerCollege"    column="container_college"    />
+        <result property="containerAddress"    column="container_address"    />
+        <result property="containerGps"    column="container_gps"    />
+        <result property="containerCode"    column="container_code"    />
+        <result property="containerFreeNumber"    column="container_free_number"    />
+        <result property="containerState"    column="container_state"    />
+        <result property="containerFloor"    column="container_floor"    />
+        <result property="containerNumberPerFloor"    column="container_number_per_floor"    />
+    </resultMap>
+
+    <sql id="selectLocContainerVo">
+        select container_id, container_college, container_address, container_gps, container_code, container_free_number, container_state, container_floor, container_number_per_floor from loc_container
+    </sql>
+
+    <select id="selectLocContainerList" parameterType="LocContainer" resultMap="LocContainerResult">
+        <include refid="selectLocContainerVo"/>
+        <where>  
+            <if test="containerId != null "> and container_id = #{containerId}</if>
+            <if test="containerCollege != null  and containerCollege != ''"> and container_college = #{containerCollege}</if>
+            <if test="containerAddress != null  and containerAddress != ''"> and container_address = #{containerAddress}</if>
+            <if test="containerGps != null  and containerGps != ''"> and container_gps = #{containerGps}</if>
+            <if test="containerCode != null  and containerCode != ''"> and container_code = #{containerCode}</if>
+            <if test="containerFreeNumber != null "> and container_free_number = #{containerFreeNumber}</if>
+            <if test="containerState != null "> and container_state = #{containerState}</if>
+            <if test="containerFloor != null "> and container_floor = #{containerFloor}</if>
+            <if test="containerNumberPerFloor != null "> and container_number_per_floor = #{containerNumberPerFloor}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocContainerById" parameterType="Integer" resultMap="LocContainerResult">
+        <include refid="selectLocContainerVo"/>
+        where container_id = #{containerId}
+    </select>
+        
+    <insert id="insertLocContainer" parameterType="LocContainer" useGeneratedKeys="true" keyProperty="containerId">
+        insert into loc_container
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="containerCollege != null">container_college,</if>
+            <if test="containerAddress != null">container_address,</if>
+            <if test="containerGps != null">container_gps,</if>
+            <if test="containerCode != null">container_code,</if>
+            <if test="containerFreeNumber != null">container_free_number,</if>
+            <if test="containerState != null">container_state,</if>
+            <if test="containerFloor != null">container_floor,</if>
+            <if test="containerNumberPerFloor != null">container_number_per_floor,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="containerCollege != null">#{containerCollege},</if>
+            <if test="containerAddress != null">#{containerAddress},</if>
+            <if test="containerGps != null">#{containerGps},</if>
+            <if test="containerCode != null">#{containerCode},</if>
+            <if test="containerFreeNumber != null">#{containerFreeNumber},</if>
+            <if test="containerState != null">#{containerState},</if>
+            <if test="containerFloor != null">#{containerFloor},</if>
+            <if test="containerNumberPerFloor != null">#{containerNumberPerFloor},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocContainer" parameterType="LocContainer">
+        update loc_container
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="containerCollege != null">container_college = #{containerCollege},</if>
+            <if test="containerAddress != null">container_address = #{containerAddress},</if>
+            <if test="containerGps != null">container_gps = #{containerGps},</if>
+            <if test="containerCode != null">container_code = #{containerCode},</if>
+            <if test="containerFreeNumber != null">container_free_number = #{containerFreeNumber},</if>
+            <if test="containerState != null">container_state = #{containerState},</if>
+            <if test="containerFloor != null">container_floor = #{containerFloor},</if>
+            <if test="containerNumberPerFloor != null">container_number_per_floor = #{containerNumberPerFloor},</if>
+        </trim>
+        where container_id = #{containerId}
+    </update>
+
+    <delete id="deleteLocContainerById" parameterType="Integer">
+        delete from loc_container where container_id = #{containerId}
+    </delete>
+
+    <delete id="deleteLocContainerByIds" parameterType="String">
+        delete from loc_container where container_id in 
+        <foreach item="containerId" collection="array" open="(" separator="," close=")">
+            #{containerId}
+        </foreach>
+    </delete>
+
+</mapper>

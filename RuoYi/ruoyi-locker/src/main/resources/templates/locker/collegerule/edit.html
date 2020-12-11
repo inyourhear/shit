@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改开放学院规则')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-collegerule-edit" th:object="${locCollegerule}">
+            <input name="collegeruleId" th:field="*{collegeruleId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">开放学院：</label>
+                <div class="col-sm-8">
+                    <input name="collegeruleCollege" th:field="*{collegeruleCollege}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "locker/collegerule";
+        $("#form-collegerule-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-collegerule-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocOrderMapper">
+    
+    <resultMap type="LocOrder" id="LocOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="orderPortId"    column="order_port_id"    />
+        <result property="orderTime"    column="order_time"    />
+        <result property="orderState"    column="order_state"    />
+    </resultMap>
+
+    <sql id="selectLocOrderVo">
+        select order_id, order_port_id, order_time, order_state from loc_order
+    </sql>
+
+    <select id="selectLocOrderList" parameterType="LocOrder" resultMap="LocOrderResult">
+        <include refid="selectLocOrderVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="orderPortId != null "> and order_port_id = #{orderPortId}</if>
+            <if test="orderTime != null "> and order_time = #{orderTime}</if>
+            <if test="orderState != null "> and order_state = #{orderState}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocOrderById" parameterType="Integer" resultMap="LocOrderResult">
+        <include refid="selectLocOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+        
+    <insert id="insertLocOrder" parameterType="LocOrder" useGeneratedKeys="true" keyProperty="orderId">
+        insert into loc_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderPortId != null">order_port_id,</if>
+            <if test="orderTime != null">order_time,</if>
+            <if test="orderState != null">order_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderPortId != null">#{orderPortId},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+            <if test="orderState != null">#{orderState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocOrder" parameterType="LocOrder">
+        update loc_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderPortId != null">order_port_id = #{orderPortId},</if>
+            <if test="orderTime != null">order_time = #{orderTime},</if>
+            <if test="orderState != null">order_state = #{orderState},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteLocOrderById" parameterType="Integer">
+        delete from loc_order where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteLocOrderByIds" parameterType="String">
+        delete from loc_order where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+</mapper>

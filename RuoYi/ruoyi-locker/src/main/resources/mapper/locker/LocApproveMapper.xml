@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocApproveMapper">
+    
+    <resultMap type="LocApprove" id="LocApproveResult">
+        <result property="approveId"    column="approve_id"    />
+        <result property="approveBorrowId"    column="approve_borrow_id"    />
+        <result property="approveAdministratorsId"    column="approve_administrators_id"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="approveResult"    column="approve_result"    />
+        <result property="approveNext"    column="approve_next"    />
+    </resultMap>
+
+    <sql id="selectLocApproveVo">
+        select approve_id, approve_borrow_id, approve_administrators_id, approve_time, approve_result, approve_next from loc_approve
+    </sql>
+
+    <select id="selectLocApproveList" parameterType="LocApprove" resultMap="LocApproveResult">
+        <include refid="selectLocApproveVo"/>
+        <where>  
+            <if test="approveId != null "> and approve_id = #{approveId}</if>
+            <if test="approveBorrowId != null "> and approve_borrow_id = #{approveBorrowId}</if>
+            <if test="approveAdministratorsId != null "> and approve_administrators_id = #{approveAdministratorsId}</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+            <if test="approveResult != null "> and approve_result = #{approveResult}</if>
+            <if test="approveNext != null "> and approve_next = #{approveNext}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocApproveById" parameterType="Integer" resultMap="LocApproveResult">
+        <include refid="selectLocApproveVo"/>
+        where approve_id = #{approveId}
+    </select>
+        
+    <insert id="insertLocApprove" parameterType="LocApprove" useGeneratedKeys="true" keyProperty="approveId">
+        insert into loc_approve
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="approveBorrowId != null">approve_borrow_id,</if>
+            <if test="approveAdministratorsId != null">approve_administrators_id,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="approveResult != null">approve_result,</if>
+            <if test="approveNext != null">approve_next,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="approveBorrowId != null">#{approveBorrowId},</if>
+            <if test="approveAdministratorsId != null">#{approveAdministratorsId},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="approveResult != null">#{approveResult},</if>
+            <if test="approveNext != null">#{approveNext},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocApprove" parameterType="LocApprove">
+        update loc_approve
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="approveBorrowId != null">approve_borrow_id = #{approveBorrowId},</if>
+            <if test="approveAdministratorsId != null">approve_administrators_id = #{approveAdministratorsId},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="approveResult != null">approve_result = #{approveResult},</if>
+            <if test="approveNext != null">approve_next = #{approveNext},</if>
+        </trim>
+        where approve_id = #{approveId}
+    </update>
+
+    <delete id="deleteLocApproveById" parameterType="Integer">
+        delete from loc_approve where approve_id = #{approveId}
+    </delete>
+
+    <delete id="deleteLocApproveByIds" parameterType="String">
+        delete from loc_approve where approve_id in 
+        <foreach item="approveId" collection="array" open="(" separator="," close=")">
+            #{approveId}
+        </foreach>
+    </delete>
+
+</mapper>

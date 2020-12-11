@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocEquipmentTypeMapper">
+    
+    <resultMap type="LocEquipmentType" id="LocEquipmentTypeResult">
+        <result property="equipmentTypeId"    column="equipment_type_id"    />
+        <result property="equipmentTypeName"    column="equipment_type_name"    />
+        <result property="equipmentTypeModel"    column="equipment_type_model"    />
+        <result property="equipmentTypeSpecs"    column="equipment_type_specs"    />
+        <result property="equipmentTypeClassification"    column="equipment_type_classification"    />
+    </resultMap>
+
+    <sql id="selectLocEquipmentTypeVo">
+        select equipment_type_id, equipment_type_name, equipment_type_model, equipment_type_specs, equipment_type_classification from loc_equipment_type
+    </sql>
+
+    <select id="selectLocEquipmentTypeList" parameterType="LocEquipmentType" resultMap="LocEquipmentTypeResult">
+        <include refid="selectLocEquipmentTypeVo"/>
+        <where>  
+            <if test="equipmentTypeId != null "> and equipment_type_id = #{equipmentTypeId}</if>
+            <if test="equipmentTypeName != null  and equipmentTypeName != ''"> and equipment_type_name like concat('%', #{equipmentTypeName}, '%')</if>
+            <if test="equipmentTypeModel != null  and equipmentTypeModel != ''"> and equipment_type_model = #{equipmentTypeModel}</if>
+            <if test="equipmentTypeSpecs != null  and equipmentTypeSpecs != ''"> and equipment_type_specs = #{equipmentTypeSpecs}</if>
+            <if test="equipmentTypeClassification != null  and equipmentTypeClassification != ''"> and equipment_type_classification = #{equipmentTypeClassification}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocEquipmentTypeById" parameterType="Integer" resultMap="LocEquipmentTypeResult">
+        <include refid="selectLocEquipmentTypeVo"/>
+        where equipment_type_id = #{equipmentTypeId}
+    </select>
+        
+    <insert id="insertLocEquipmentType" parameterType="LocEquipmentType" useGeneratedKeys="true" keyProperty="equipmentTypeId">
+        insert into loc_equipment_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="equipmentTypeName != null">equipment_type_name,</if>
+            <if test="equipmentTypeModel != null">equipment_type_model,</if>
+            <if test="equipmentTypeSpecs != null">equipment_type_specs,</if>
+            <if test="equipmentTypeClassification != null">equipment_type_classification,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="equipmentTypeName != null">#{equipmentTypeName},</if>
+            <if test="equipmentTypeModel != null">#{equipmentTypeModel},</if>
+            <if test="equipmentTypeSpecs != null">#{equipmentTypeSpecs},</if>
+            <if test="equipmentTypeClassification != null">#{equipmentTypeClassification},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocEquipmentType" parameterType="LocEquipmentType">
+        update loc_equipment_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="equipmentTypeName != null">equipment_type_name = #{equipmentTypeName},</if>
+            <if test="equipmentTypeModel != null">equipment_type_model = #{equipmentTypeModel},</if>
+            <if test="equipmentTypeSpecs != null">equipment_type_specs = #{equipmentTypeSpecs},</if>
+            <if test="equipmentTypeClassification != null">equipment_type_classification = #{equipmentTypeClassification},</if>
+        </trim>
+        where equipment_type_id = #{equipmentTypeId}
+    </update>
+
+    <delete id="deleteLocEquipmentTypeById" parameterType="Integer">
+        delete from loc_equipment_type where equipment_type_id = #{equipmentTypeId}
+    </delete>
+
+    <delete id="deleteLocEquipmentTypeByIds" parameterType="String">
+        delete from loc_equipment_type where equipment_type_id in 
+        <foreach item="equipmentTypeId" collection="array" open="(" separator="," close=")">
+            #{equipmentTypeId}
+        </foreach>
+    </delete>
+
+</mapper>

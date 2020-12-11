@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocClassruleMapper">
+    
+    <resultMap type="LocClassrule" id="LocClassruleResult">
+        <result property="classruleId"    column="classrule_id"    />
+        <result property="classruleClass"    column="classrule_class"    />
+    </resultMap>
+
+    <sql id="selectLocClassruleVo">
+        select classrule_id, classrule_class from loc_classrule
+    </sql>
+
+    <select id="selectLocClassruleList" parameterType="LocClassrule" resultMap="LocClassruleResult">
+        <include refid="selectLocClassruleVo"/>
+        <where>  
+            <if test="classruleId != null "> and classrule_id = #{classruleId}</if>
+            <if test="classruleClass != null  and classruleClass != ''"> and classrule_class = #{classruleClass}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocClassruleById" parameterType="Integer" resultMap="LocClassruleResult">
+        <include refid="selectLocClassruleVo"/>
+        where classrule_id = #{classruleId}
+    </select>
+        
+    <insert id="insertLocClassrule" parameterType="LocClassrule" useGeneratedKeys="true" keyProperty="classruleId">
+        insert into loc_classrule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classruleClass != null">classrule_class,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classruleClass != null">#{classruleClass},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocClassrule" parameterType="LocClassrule">
+        update loc_classrule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classruleClass != null">classrule_class = #{classruleClass},</if>
+        </trim>
+        where classrule_id = #{classruleId}
+    </update>
+
+    <delete id="deleteLocClassruleById" parameterType="Integer">
+        delete from loc_classrule where classrule_id = #{classruleId}
+    </delete>
+
+    <delete id="deleteLocClassruleByIds" parameterType="String">
+        delete from loc_classrule where classrule_id in 
+        <foreach item="classruleId" collection="array" open="(" separator="," close=")">
+            #{classruleId}
+        </foreach>
+    </delete>
+
+</mapper>

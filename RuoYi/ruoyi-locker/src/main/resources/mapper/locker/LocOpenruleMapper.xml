@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocOpenruleMapper">
+    
+    <resultMap type="LocOpenrule" id="LocOpenruleResult">
+        <result property="openruleId"    column="openrule_id"    />
+        <result property="openruleBoxCode"    column="openrule_box_code"    />
+        <result property="openruleType"    column="openrule_type"    />
+        <result property="openruleApproveTimes"    column="openrule_approve_times"    />
+    </resultMap>
+
+    <sql id="selectLocOpenruleVo">
+        select openrule_id, openrule_box_code, openrule_type, openrule_approve_times from loc_openrule
+    </sql>
+
+    <select id="selectLocOpenruleList" parameterType="LocOpenrule" resultMap="LocOpenruleResult">
+        <include refid="selectLocOpenruleVo"/>
+        <where>  
+            <if test="openruleId != null "> and openrule_id = #{openruleId}</if>
+            <if test="openruleBoxCode != null "> and openrule_box_code = #{openruleBoxCode}</if>
+            <if test="openruleType != null "> and openrule_type = #{openruleType}</if>
+            <if test="openruleApproveTimes != null "> and openrule_approve_times = #{openruleApproveTimes}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocOpenruleById" parameterType="Integer" resultMap="LocOpenruleResult">
+        <include refid="selectLocOpenruleVo"/>
+        where openrule_id = #{openruleId}
+    </select>
+        
+    <insert id="insertLocOpenrule" parameterType="LocOpenrule" useGeneratedKeys="true" keyProperty="openruleId">
+        insert into loc_openrule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openruleBoxCode != null">openrule_box_code,</if>
+            <if test="openruleType != null">openrule_type,</if>
+            <if test="openruleApproveTimes != null">openrule_approve_times,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openruleBoxCode != null">#{openruleBoxCode},</if>
+            <if test="openruleType != null">#{openruleType},</if>
+            <if test="openruleApproveTimes != null">#{openruleApproveTimes},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocOpenrule" parameterType="LocOpenrule">
+        update loc_openrule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="openruleBoxCode != null">openrule_box_code = #{openruleBoxCode},</if>
+            <if test="openruleType != null">openrule_type = #{openruleType},</if>
+            <if test="openruleApproveTimes != null">openrule_approve_times = #{openruleApproveTimes},</if>
+        </trim>
+        where openrule_id = #{openruleId}
+    </update>
+
+    <delete id="deleteLocOpenruleById" parameterType="Integer">
+        delete from loc_openrule where openrule_id = #{openruleId}
+    </delete>
+
+    <delete id="deleteLocOpenruleByIds" parameterType="String">
+        delete from loc_openrule where openrule_id in 
+        <foreach item="openruleId" collection="array" open="(" separator="," close=")">
+            #{openruleId}
+        </foreach>
+    </delete>
+
+</mapper>

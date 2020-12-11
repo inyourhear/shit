@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocBoardMapper">
+    
+    <resultMap type="LocBoard" id="LocBoardResult">
+        <result property="boardId"    column="board_id"    />
+        <result property="boardCode"    column="board_code"    />
+        <result property="boardContainerId"    column="board_container_id"    />
+        <result property="boardNumber"    column="board_number"    />
+        <result property="boardIpAddress"    column="board_ip_address"    />
+    </resultMap>
+
+    <sql id="selectLocBoardVo">
+        select board_id, board_code, board_container_id, board_number, board_ip_address from loc_board
+    </sql>
+
+    <select id="selectLocBoardList" parameterType="LocBoard" resultMap="LocBoardResult">
+        <include refid="selectLocBoardVo"/>
+        <where>  
+            <if test="boardId != null "> and board_id = #{boardId}</if>
+            <if test="boardCode != null  and boardCode != ''"> and board_code = #{boardCode}</if>
+            <if test="boardContainerId != null "> and board_container_id = #{boardContainerId}</if>
+            <if test="boardNumber != null "> and board_number = #{boardNumber}</if>
+            <if test="boardIpAddress != null  and boardIpAddress != ''"> and board_ip_address = #{boardIpAddress}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocBoardById" parameterType="Integer" resultMap="LocBoardResult">
+        <include refid="selectLocBoardVo"/>
+        where board_id = #{boardId}
+    </select>
+        
+    <insert id="insertLocBoard" parameterType="LocBoard" useGeneratedKeys="true" keyProperty="boardId">
+        insert into loc_board
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="boardCode != null">board_code,</if>
+            <if test="boardContainerId != null">board_container_id,</if>
+            <if test="boardNumber != null">board_number,</if>
+            <if test="boardIpAddress != null">board_ip_address,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="boardCode != null">#{boardCode},</if>
+            <if test="boardContainerId != null">#{boardContainerId},</if>
+            <if test="boardNumber != null">#{boardNumber},</if>
+            <if test="boardIpAddress != null">#{boardIpAddress},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocBoard" parameterType="LocBoard">
+        update loc_board
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="boardCode != null">board_code = #{boardCode},</if>
+            <if test="boardContainerId != null">board_container_id = #{boardContainerId},</if>
+            <if test="boardNumber != null">board_number = #{boardNumber},</if>
+            <if test="boardIpAddress != null">board_ip_address = #{boardIpAddress},</if>
+        </trim>
+        where board_id = #{boardId}
+    </update>
+
+    <delete id="deleteLocBoardById" parameterType="Integer">
+        delete from loc_board where board_id = #{boardId}
+    </delete>
+
+    <delete id="deleteLocBoardByIds" parameterType="String">
+        delete from loc_board where board_id in 
+        <foreach item="boardId" collection="array" open="(" separator="," close=")">
+            #{boardId}
+        </foreach>
+    </delete>
+
+</mapper>

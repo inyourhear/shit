@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocEquipmentDetailMapper">
+    
+    <resultMap type="LocEquipmentDetail" id="LocEquipmentDetailResult">
+        <result property="equipmentDetailId"    column="equipment_detail_id"    />
+        <result property="equipmentDetailTypeid"    column="equipment_detail_typeid"    />
+        <result property="equipmentDetailName"    column="equipment_detail_name"    />
+        <result property="equipmentDetailCode"    column="equipment_detail_code"    />
+        <result property="equipmentDetailAssetNumber"    column="equipment_detail_asset_number"    />
+        <result property="equipmentDetailFactoryCode"    column="equipment_detail_factory_code"    />
+        <result property="equipmentDetailBoxCode"    column="equipment_detail_box_code"    />
+        <result property="equipmentDetailState"    column="equipment_detail_state"    />
+    </resultMap>
+
+    <sql id="selectLocEquipmentDetailVo">
+        select equipment_detail_id, equipment_detail_typeid, equipment_detail_name, equipment_detail_code, equipment_detail_asset_number, equipment_detail_factory_code, equipment_detail_box_code, equipment_detail_state from loc_equipment_detail
+    </sql>
+
+    <select id="selectLocEquipmentDetailList" parameterType="LocEquipmentDetail" resultMap="LocEquipmentDetailResult">
+        <include refid="selectLocEquipmentDetailVo"/>
+        <where>  
+            <if test="equipmentDetailId != null "> and equipment_detail_id = #{equipmentDetailId}</if>
+            <if test="equipmentDetailTypeid != null "> and equipment_detail_typeid = #{equipmentDetailTypeid}</if>
+            <if test="equipmentDetailName != null  and equipmentDetailName != ''"> and equipment_detail_name like concat('%', #{equipmentDetailName}, '%')</if>
+            <if test="equipmentDetailCode != null  and equipmentDetailCode != ''"> and equipment_detail_code = #{equipmentDetailCode}</if>
+            <if test="equipmentDetailAssetNumber != null "> and equipment_detail_asset_number = #{equipmentDetailAssetNumber}</if>
+            <if test="equipmentDetailFactoryCode != null  and equipmentDetailFactoryCode != ''"> and equipment_detail_factory_code = #{equipmentDetailFactoryCode}</if>
+            <if test="equipmentDetailBoxCode != null  and equipmentDetailBoxCode != ''"> and equipment_detail_box_code = #{equipmentDetailBoxCode}</if>
+            <if test="equipmentDetailState != null "> and equipment_detail_state = #{equipmentDetailState}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocEquipmentDetailById" parameterType="Integer" resultMap="LocEquipmentDetailResult">
+        <include refid="selectLocEquipmentDetailVo"/>
+        where equipment_detail_id = #{equipmentDetailId}
+    </select>
+        
+    <insert id="insertLocEquipmentDetail" parameterType="LocEquipmentDetail" useGeneratedKeys="true" keyProperty="equipmentDetailId">
+        insert into loc_equipment_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="equipmentDetailTypeid != null">equipment_detail_typeid,</if>
+            <if test="equipmentDetailName != null">equipment_detail_name,</if>
+            <if test="equipmentDetailCode != null">equipment_detail_code,</if>
+            <if test="equipmentDetailAssetNumber != null">equipment_detail_asset_number,</if>
+            <if test="equipmentDetailFactoryCode != null">equipment_detail_factory_code,</if>
+            <if test="equipmentDetailBoxCode != null">equipment_detail_box_code,</if>
+            <if test="equipmentDetailState != null">equipment_detail_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="equipmentDetailTypeid != null">#{equipmentDetailTypeid},</if>
+            <if test="equipmentDetailName != null">#{equipmentDetailName},</if>
+            <if test="equipmentDetailCode != null">#{equipmentDetailCode},</if>
+            <if test="equipmentDetailAssetNumber != null">#{equipmentDetailAssetNumber},</if>
+            <if test="equipmentDetailFactoryCode != null">#{equipmentDetailFactoryCode},</if>
+            <if test="equipmentDetailBoxCode != null">#{equipmentDetailBoxCode},</if>
+            <if test="equipmentDetailState != null">#{equipmentDetailState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocEquipmentDetail" parameterType="LocEquipmentDetail">
+        update loc_equipment_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="equipmentDetailTypeid != null">equipment_detail_typeid = #{equipmentDetailTypeid},</if>
+            <if test="equipmentDetailName != null">equipment_detail_name = #{equipmentDetailName},</if>
+            <if test="equipmentDetailCode != null">equipment_detail_code = #{equipmentDetailCode},</if>
+            <if test="equipmentDetailAssetNumber != null">equipment_detail_asset_number = #{equipmentDetailAssetNumber},</if>
+            <if test="equipmentDetailFactoryCode != null">equipment_detail_factory_code = #{equipmentDetailFactoryCode},</if>
+            <if test="equipmentDetailBoxCode != null">equipment_detail_box_code = #{equipmentDetailBoxCode},</if>
+            <if test="equipmentDetailState != null">equipment_detail_state = #{equipmentDetailState},</if>
+        </trim>
+        where equipment_detail_id = #{equipmentDetailId}
+    </update>
+
+    <delete id="deleteLocEquipmentDetailById" parameterType="Integer">
+        delete from loc_equipment_detail where equipment_detail_id = #{equipmentDetailId}
+    </delete>
+
+    <delete id="deleteLocEquipmentDetailByIds" parameterType="String">
+        delete from loc_equipment_detail where equipment_detail_id in 
+        <foreach item="equipmentDetailId" collection="array" open="(" separator="," close=")">
+            #{equipmentDetailId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocDockingMapper">
+    
+    <resultMap type="LocDocking" id="LocDockingResult">
+        <result property="dockingId"    column="docking_id"    />
+        <result property="dockingExchangeId"    column="docking_exchange_id"    />
+        <result property="dockingPersonId"    column="docking_person_id"    />
+        <result property="dockingTime"    column="docking_time"    />
+    </resultMap>
+
+    <sql id="selectLocDockingVo">
+        select docking_id, docking_exchange_id, docking_person_id, docking_time from loc_docking
+    </sql>
+
+    <select id="selectLocDockingList" parameterType="LocDocking" resultMap="LocDockingResult">
+        <include refid="selectLocDockingVo"/>
+        <where>  
+            <if test="dockingId != null "> and docking_id = #{dockingId}</if>
+            <if test="dockingExchangeId != null "> and docking_exchange_id = #{dockingExchangeId}</if>
+            <if test="dockingPersonId != null "> and docking_person_id = #{dockingPersonId}</if>
+            <if test="dockingTime != null "> and docking_time = #{dockingTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocDockingById" parameterType="Long" resultMap="LocDockingResult">
+        <include refid="selectLocDockingVo"/>
+        where docking_id = #{dockingId}
+    </select>
+        
+    <insert id="insertLocDocking" parameterType="LocDocking" useGeneratedKeys="true" keyProperty="dockingId">
+        insert into loc_docking
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dockingExchangeId != null">docking_exchange_id,</if>
+            <if test="dockingPersonId != null">docking_person_id,</if>
+            <if test="dockingTime != null">docking_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dockingExchangeId != null">#{dockingExchangeId},</if>
+            <if test="dockingPersonId != null">#{dockingPersonId},</if>
+            <if test="dockingTime != null">#{dockingTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocDocking" parameterType="LocDocking">
+        update loc_docking
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dockingExchangeId != null">docking_exchange_id = #{dockingExchangeId},</if>
+            <if test="dockingPersonId != null">docking_person_id = #{dockingPersonId},</if>
+            <if test="dockingTime != null">docking_time = #{dockingTime},</if>
+        </trim>
+        where docking_id = #{dockingId}
+    </update>
+
+    <delete id="deleteLocDockingById" parameterType="Long">
+        delete from loc_docking where docking_id = #{dockingId}
+    </delete>
+
+    <delete id="deleteLocDockingByIds" parameterType="String">
+        delete from loc_docking where docking_id in 
+        <foreach item="dockingId" collection="array" open="(" separator="," close=")">
+            #{dockingId}
+        </foreach>
+    </delete>
+
+</mapper>

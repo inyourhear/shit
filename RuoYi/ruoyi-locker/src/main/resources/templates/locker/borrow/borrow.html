@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('借用信息列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>借用ID：</label>
+                                <input type="text" name="borrowId"/>
+                            </li>
+                            <li>
+                                <label>用户ID：</label>
+                                <input type="text" name="borrowUserId"/>
+                            </li>
+                            <li>
+                                <label>设备ID：</label>
+                                <input type="text" name="borrowEquipmentId"/>
+                            </li>
+                            <li>
+                                <label>设备名：</label>
+                                <input type="text" name="borrowEquipmentName"/>
+                            </li>
+                            <li>
+                                <label>设备类型ID：</label>
+                                <input type="text" name="borrowEquipmentTypeId"/>
+                            </li>
+                            <li>
+                                <label>格子编码：</label>
+                                <input type="text" name="borrowBoxCode"/>
+                            </li>
+                            <li class="select-time">
+                                <label>借用时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginBorrowTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endBorrowTime]"/>
+                            </li>
+                            <li class="select-time">
+                                <label>预计归还时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginBorrowExpectTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endBorrowExpectTime]"/>
+                            </li>
+                            <li class="select-time">
+                                <label>实际归还时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginBorrowRealTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endBorrowRealTime]"/>
+                            </li>
+                            <li>
+                                <label>状态：</label>
+                                <select name="borrowState" th:with="type=${@dict.getType('loc_borrow_borrow_state')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>是否故障：</label>
+                                <select name="borrowFault" th:with="type=${@dict.getType('loc_borrow_borrow_fault')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li class="select-time">
+                                <label>申请时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginBorrowApplyTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endBorrowApplyTime]"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="locker:borrow:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="locker:borrow:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="locker:borrow:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="locker:borrow:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('locker:borrow:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('locker:borrow:remove')}]];
+        var borrowStateDatas = [[${@dict.getType('loc_borrow_borrow_state')}]];
+        var borrowFaultDatas = [[${@dict.getType('loc_borrow_borrow_fault')}]];
+        var prefix = ctx + "locker/borrow";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "借用信息",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'borrowId',
+                    title: '借用ID',
+                    visible: false
+                },
+                {
+                    field: 'borrowUserId',
+                    title: '用户ID'
+                },
+                {
+                    field: 'borrowEquipmentId',
+                    title: '设备ID'
+                },
+                {
+                    field: 'borrowEquipmentName',
+                    title: '设备名'
+                },
+                {
+                    field: 'borrowEquipmentTypeId',
+                    title: '设备类型ID'
+                },
+                {
+                    field: 'borrowBoxCode',
+                    title: '格子编码'
+                },
+                {
+                    field: 'borrowTime',
+                    title: '借用时间'
+                },
+                {
+                    field: 'borrowExpectTime',
+                    title: '预计归还时间'
+                },
+                {
+                    field: 'borrowRealTime',
+                    title: '实际归还时间'
+                },
+                {
+                    field: 'borrowState',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(borrowStateDatas, value);
+                    }
+                },
+                {
+                    field: 'borrowFault',
+                    title: '是否故障',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(borrowFaultDatas, value);
+                    }
+                },
+                {
+                    field: 'borrowApplyTime',
+                    title: '申请时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.borrowId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.borrowId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

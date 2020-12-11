@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocContainerManagerMapper">
+    
+    <resultMap type="LocContainerManager" id="LocContainerManagerResult">
+        <result property="id"    column="id"    />
+        <result property="containerManagerContainerId"    column="container_manager_container_id"    />
+        <result property="containerManagerAdministratorsId"    column="container_manager_administrators_id"    />
+    </resultMap>
+
+    <sql id="selectLocContainerManagerVo">
+        select id, container_manager_container_id, container_manager_administrators_id from loc_container_manager
+    </sql>
+
+    <select id="selectLocContainerManagerList" parameterType="LocContainerManager" resultMap="LocContainerManagerResult">
+        <include refid="selectLocContainerManagerVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="containerManagerContainerId != null "> and container_manager_container_id = #{containerManagerContainerId}</if>
+            <if test="containerManagerAdministratorsId != null "> and container_manager_administrators_id = #{containerManagerAdministratorsId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocContainerManagerById" parameterType="Integer" resultMap="LocContainerManagerResult">
+        <include refid="selectLocContainerManagerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLocContainerManager" parameterType="LocContainerManager" useGeneratedKeys="true" keyProperty="id">
+        insert into loc_container_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="containerManagerContainerId != null">container_manager_container_id,</if>
+            <if test="containerManagerAdministratorsId != null">container_manager_administrators_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="containerManagerContainerId != null">#{containerManagerContainerId},</if>
+            <if test="containerManagerAdministratorsId != null">#{containerManagerAdministratorsId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocContainerManager" parameterType="LocContainerManager">
+        update loc_container_manager
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="containerManagerContainerId != null">container_manager_container_id = #{containerManagerContainerId},</if>
+            <if test="containerManagerAdministratorsId != null">container_manager_administrators_id = #{containerManagerAdministratorsId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLocContainerManagerById" parameterType="Integer">
+        delete from loc_container_manager where id = #{id}
+    </delete>
+
+    <delete id="deleteLocContainerManagerByIds" parameterType="String">
+        delete from loc_container_manager where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

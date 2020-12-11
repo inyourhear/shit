@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocRuletableMapper">
+    
+    <resultMap type="LocRuletable" id="LocRuletableResult">
+        <result property="ruletableId"    column="ruletable_id"    />
+        <result property="ruletableName"    column="ruletable_name"    />
+        <result property="ruletableType"    column="ruletable_type"    />
+    </resultMap>
+
+    <sql id="selectLocRuletableVo">
+        select ruletable_id, ruletable_name, ruletable_type from loc_ruletable
+    </sql>
+
+    <select id="selectLocRuletableList" parameterType="LocRuletable" resultMap="LocRuletableResult">
+        <include refid="selectLocRuletableVo"/>
+        <where>  
+            <if test="ruletableId != null "> and ruletable_id = #{ruletableId}</if>
+            <if test="ruletableName != null  and ruletableName != ''"> and ruletable_name like concat('%', #{ruletableName}, '%')</if>
+            <if test="ruletableType != null  and ruletableType != ''"> and ruletable_type = #{ruletableType}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocRuletableById" parameterType="Integer" resultMap="LocRuletableResult">
+        <include refid="selectLocRuletableVo"/>
+        where ruletable_id = #{ruletableId}
+    </select>
+        
+    <insert id="insertLocRuletable" parameterType="LocRuletable" useGeneratedKeys="true" keyProperty="ruletableId">
+        insert into loc_ruletable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruletableName != null">ruletable_name,</if>
+            <if test="ruletableType != null">ruletable_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ruletableName != null">#{ruletableName},</if>
+            <if test="ruletableType != null">#{ruletableType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocRuletable" parameterType="LocRuletable">
+        update loc_ruletable
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruletableName != null">ruletable_name = #{ruletableName},</if>
+            <if test="ruletableType != null">ruletable_type = #{ruletableType},</if>
+        </trim>
+        where ruletable_id = #{ruletableId}
+    </update>
+
+    <delete id="deleteLocRuletableById" parameterType="Integer">
+        delete from loc_ruletable where ruletable_id = #{ruletableId}
+    </delete>
+
+    <delete id="deleteLocRuletableByIds" parameterType="String">
+        delete from loc_ruletable where ruletable_id in 
+        <foreach item="ruletableId" collection="array" open="(" separator="," close=")">
+            #{ruletableId}
+        </foreach>
+    </delete>
+
+</mapper>

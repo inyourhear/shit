@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocPortMapper">
+    
+    <resultMap type="LocPort" id="LocPortResult">
+        <result property="portId"    column="port_id"    />
+        <result property="portBoardId"    column="port_board_id"    />
+        <result property="portNumber"    column="port_number"    />
+        <result property="portState"    column="port_state"    />
+    </resultMap>
+
+    <sql id="selectLocPortVo">
+        select port_id, port_board_id, port_number, port_state from loc_port
+    </sql>
+
+    <select id="selectLocPortList" parameterType="LocPort" resultMap="LocPortResult">
+        <include refid="selectLocPortVo"/>
+        <where>  
+            <if test="portId != null "> and port_id = #{portId}</if>
+            <if test="portBoardId != null "> and port_board_id = #{portBoardId}</if>
+            <if test="portNumber != null "> and port_number = #{portNumber}</if>
+            <if test="portState != null "> and port_state = #{portState}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocPortById" parameterType="Integer" resultMap="LocPortResult">
+        <include refid="selectLocPortVo"/>
+        where port_id = #{portId}
+    </select>
+        
+    <insert id="insertLocPort" parameterType="LocPort" useGeneratedKeys="true" keyProperty="portId">
+        insert into loc_port
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="portBoardId != null">port_board_id,</if>
+            <if test="portNumber != null">port_number,</if>
+            <if test="portState != null">port_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="portBoardId != null">#{portBoardId},</if>
+            <if test="portNumber != null">#{portNumber},</if>
+            <if test="portState != null">#{portState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocPort" parameterType="LocPort">
+        update loc_port
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="portBoardId != null">port_board_id = #{portBoardId},</if>
+            <if test="portNumber != null">port_number = #{portNumber},</if>
+            <if test="portState != null">port_state = #{portState},</if>
+        </trim>
+        where port_id = #{portId}
+    </update>
+
+    <delete id="deleteLocPortById" parameterType="Integer">
+        delete from loc_port where port_id = #{portId}
+    </delete>
+
+    <delete id="deleteLocPortByIds" parameterType="String">
+        delete from loc_port where port_id in 
+        <foreach item="portId" collection="array" open="(" separator="," close=")">
+            #{portId}
+        </foreach>
+    </delete>
+
+</mapper>

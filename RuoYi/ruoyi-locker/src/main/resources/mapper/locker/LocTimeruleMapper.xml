@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocTimeruleMapper">
+    
+    <resultMap type="LocTimerule" id="LocTimeruleResult">
+        <result property="timeruleId"    column="timerule_id"    />
+        <result property="timeruleStartTime"    column="timerule_start_time"    />
+        <result property="timeruleEndTime"    column="timerule_end_time"    />
+    </resultMap>
+
+    <sql id="selectLocTimeruleVo">
+        select timerule_id, timerule_start_time, timerule_end_time from loc_timerule
+    </sql>
+
+    <select id="selectLocTimeruleList" parameterType="LocTimerule" resultMap="LocTimeruleResult">
+        <include refid="selectLocTimeruleVo"/>
+        <where>  
+            <if test="timeruleId != null "> and timerule_id = #{timeruleId}</if>
+            <if test="timeruleStartTime != null "> and timerule_start_time = #{timeruleStartTime}</if>
+            <if test="timeruleEndTime != null "> and timerule_end_time = #{timeruleEndTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocTimeruleById" parameterType="Integer" resultMap="LocTimeruleResult">
+        <include refid="selectLocTimeruleVo"/>
+        where timerule_id = #{timeruleId}
+    </select>
+        
+    <insert id="insertLocTimerule" parameterType="LocTimerule" useGeneratedKeys="true" keyProperty="timeruleId">
+        insert into loc_timerule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="timeruleStartTime != null">timerule_start_time,</if>
+            <if test="timeruleEndTime != null">timerule_end_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="timeruleStartTime != null">#{timeruleStartTime},</if>
+            <if test="timeruleEndTime != null">#{timeruleEndTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocTimerule" parameterType="LocTimerule">
+        update loc_timerule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="timeruleStartTime != null">timerule_start_time = #{timeruleStartTime},</if>
+            <if test="timeruleEndTime != null">timerule_end_time = #{timeruleEndTime},</if>
+        </trim>
+        where timerule_id = #{timeruleId}
+    </update>
+
+    <delete id="deleteLocTimeruleById" parameterType="Integer">
+        delete from loc_timerule where timerule_id = #{timeruleId}
+    </delete>
+
+    <delete id="deleteLocTimeruleByIds" parameterType="String">
+        delete from loc_timerule where timerule_id in 
+        <foreach item="timeruleId" collection="array" open="(" separator="," close=")">
+            #{timeruleId}
+        </foreach>
+    </delete>
+
+</mapper>

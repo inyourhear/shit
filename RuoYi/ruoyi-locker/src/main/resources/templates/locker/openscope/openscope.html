@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('格子开放范围信列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>开放范围ID：</label>
+                                <input type="text" name="openscopeId"/>
+                            </li>
+                            <li>
+                                <label>格子编码：</label>
+                                <input type="text" name="openscopeBoxCode"/>
+                            </li>
+                            <li>
+                                <label>规则表ID：</label>
+                                <input type="text" name="openscopeRuletableId"/>
+                            </li>
+                            <li>
+                                <label>规则ID：</label>
+                                <input type="text" name="openscopeRuleId"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="locker:openscope:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="locker:openscope:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="locker:openscope:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="locker:openscope:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('locker:openscope:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('locker:openscope:remove')}]];
+        var openscopeInvalidDatas = [[${@dict.getType('loc_openscope_openscope_invalid')}]];
+        var prefix = ctx + "locker/openscope";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "格子开放范围信",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'openscopeId',
+                    title: '开放范围ID',
+                    visible: false
+                },
+                {
+                    field: 'openscopeBoxCode',
+                    title: '格子编码'
+                },
+                {
+                    field: 'openscopeRuletableId',
+                    title: '规则表ID'
+                },
+                {
+                    field: 'openscopeRuleId',
+                    title: '规则ID'
+                },
+                {
+                    field: 'openscopeInvalid',
+                    title: '是否失效(0有效，1失效）',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(openscopeInvalidDatas, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.openscopeId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.openscopeId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

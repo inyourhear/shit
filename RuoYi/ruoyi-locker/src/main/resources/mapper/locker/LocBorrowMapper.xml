@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocBorrowMapper">
+    
+    <resultMap type="LocBorrow" id="LocBorrowResult">
+        <result property="borrowId"    column="borrow_id"    />
+        <result property="borrowUserId"    column="borrow_user_id"    />
+        <result property="borrowEquipmentId"    column="borrow_equipment_id"    />
+        <result property="borrowEquipmentName"    column="borrow_equipment_name"    />
+        <result property="borrowEquipmentTypeId"    column="borrow_equipment_type_id"    />
+        <result property="borrowBoxCode"    column="borrow_box_code"    />
+        <result property="borrowTime"    column="borrow_time"    />
+        <result property="borrowExpectTime"    column="borrow_expect_time"    />
+        <result property="borrowRealTime"    column="borrow_real_time"    />
+        <result property="borrowState"    column="borrow_state"    />
+        <result property="borrowFault"    column="borrow_fault"    />
+        <result property="borrowApplyTime"    column="borrow_apply_time"    />
+    </resultMap>
+
+    <sql id="selectLocBorrowVo">
+        select borrow_id, borrow_user_id, borrow_equipment_id, borrow_equipment_name, borrow_equipment_type_id, borrow_box_code, borrow_time, borrow_expect_time, borrow_real_time, borrow_state, borrow_fault, borrow_apply_time from loc_borrow
+    </sql>
+
+    <select id="selectLocBorrowList" parameterType="LocBorrow" resultMap="LocBorrowResult">
+        <include refid="selectLocBorrowVo"/>
+        <where>  
+            <if test="borrowId != null "> and borrow_id = #{borrowId}</if>
+            <if test="borrowUserId != null "> and borrow_user_id = #{borrowUserId}</if>
+            <if test="borrowEquipmentId != null "> and borrow_equipment_id = #{borrowEquipmentId}</if>
+            <if test="borrowEquipmentName != null  and borrowEquipmentName != ''"> and borrow_equipment_name like concat('%', #{borrowEquipmentName}, '%')</if>
+            <if test="borrowEquipmentTypeId != null "> and borrow_equipment_type_id = #{borrowEquipmentTypeId}</if>
+            <if test="borrowBoxCode != null  and borrowBoxCode != ''"> and borrow_box_code = #{borrowBoxCode}</if>
+            <if test="borrowTime != null "> and borrow_time = #{borrowTime}</if>
+            <if test="borrowExpectTime != null "> and borrow_expect_time = #{borrowExpectTime}</if>
+            <if test="borrowRealTime != null "> and borrow_real_time = #{borrowRealTime}</if>
+            <if test="borrowState != null "> and borrow_state = #{borrowState}</if>
+            <if test="borrowFault != null "> and borrow_fault = #{borrowFault}</if>
+            <if test="borrowApplyTime != null "> and borrow_apply_time = #{borrowApplyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocBorrowById" parameterType="Integer" resultMap="LocBorrowResult">
+        <include refid="selectLocBorrowVo"/>
+        where borrow_id = #{borrowId}
+    </select>
+        
+    <insert id="insertLocBorrow" parameterType="LocBorrow" useGeneratedKeys="true" keyProperty="borrowId">
+        insert into loc_borrow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="borrowUserId != null">borrow_user_id,</if>
+            <if test="borrowEquipmentId != null">borrow_equipment_id,</if>
+            <if test="borrowEquipmentName != null">borrow_equipment_name,</if>
+            <if test="borrowEquipmentTypeId != null">borrow_equipment_type_id,</if>
+            <if test="borrowBoxCode != null">borrow_box_code,</if>
+            <if test="borrowTime != null">borrow_time,</if>
+            <if test="borrowExpectTime != null">borrow_expect_time,</if>
+            <if test="borrowRealTime != null">borrow_real_time,</if>
+            <if test="borrowState != null">borrow_state,</if>
+            <if test="borrowFault != null">borrow_fault,</if>
+            <if test="borrowApplyTime != null">borrow_apply_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="borrowUserId != null">#{borrowUserId},</if>
+            <if test="borrowEquipmentId != null">#{borrowEquipmentId},</if>
+            <if test="borrowEquipmentName != null">#{borrowEquipmentName},</if>
+            <if test="borrowEquipmentTypeId != null">#{borrowEquipmentTypeId},</if>
+            <if test="borrowBoxCode != null">#{borrowBoxCode},</if>
+            <if test="borrowTime != null">#{borrowTime},</if>
+            <if test="borrowExpectTime != null">#{borrowExpectTime},</if>
+            <if test="borrowRealTime != null">#{borrowRealTime},</if>
+            <if test="borrowState != null">#{borrowState},</if>
+            <if test="borrowFault != null">#{borrowFault},</if>
+            <if test="borrowApplyTime != null">#{borrowApplyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocBorrow" parameterType="LocBorrow">
+        update loc_borrow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="borrowUserId != null">borrow_user_id = #{borrowUserId},</if>
+            <if test="borrowEquipmentId != null">borrow_equipment_id = #{borrowEquipmentId},</if>
+            <if test="borrowEquipmentName != null">borrow_equipment_name = #{borrowEquipmentName},</if>
+            <if test="borrowEquipmentTypeId != null">borrow_equipment_type_id = #{borrowEquipmentTypeId},</if>
+            <if test="borrowBoxCode != null">borrow_box_code = #{borrowBoxCode},</if>
+            <if test="borrowTime != null">borrow_time = #{borrowTime},</if>
+            <if test="borrowExpectTime != null">borrow_expect_time = #{borrowExpectTime},</if>
+            <if test="borrowRealTime != null">borrow_real_time = #{borrowRealTime},</if>
+            <if test="borrowState != null">borrow_state = #{borrowState},</if>
+            <if test="borrowFault != null">borrow_fault = #{borrowFault},</if>
+            <if test="borrowApplyTime != null">borrow_apply_time = #{borrowApplyTime},</if>
+        </trim>
+        where borrow_id = #{borrowId}
+    </update>
+
+    <delete id="deleteLocBorrowById" parameterType="Integer">
+        delete from loc_borrow where borrow_id = #{borrowId}
+    </delete>
+
+    <delete id="deleteLocBorrowByIds" parameterType="String">
+        delete from loc_borrow where borrow_id in 
+        <foreach item="borrowId" collection="array" open="(" separator="," close=")">
+            #{borrowId}
+        </foreach>
+    </delete>
+
+</mapper>

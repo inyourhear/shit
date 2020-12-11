@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocAdministratorsMapper">
+    
+    <resultMap type="LocAdministrators" id="LocAdministratorsResult">
+        <result property="administratorsId"    column="administrators_id"    />
+        <result property="administratorsName"    column="administrators_name"    />
+        <result property="administratorsPhone"    column="administrators_phone"    />
+    </resultMap>
+
+    <sql id="selectLocAdministratorsVo">
+        select administrators_id, administrators_name, administrators_phone from loc_administrators
+    </sql>
+
+    <select id="selectLocAdministratorsList" parameterType="LocAdministrators" resultMap="LocAdministratorsResult">
+        <include refid="selectLocAdministratorsVo"/>
+        <where>  
+            <if test="administratorsId != null "> and administrators_id = #{administratorsId}</if>
+            <if test="administratorsName != null  and administratorsName != ''"> and administrators_name like concat('%', #{administratorsName}, '%')</if>
+            <if test="administratorsPhone != null  and administratorsPhone != ''"> and administrators_phone = #{administratorsPhone}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocAdministratorsById" parameterType="Integer" resultMap="LocAdministratorsResult">
+        <include refid="selectLocAdministratorsVo"/>
+        where administrators_id = #{administratorsId}
+    </select>
+        
+    <insert id="insertLocAdministrators" parameterType="LocAdministrators" useGeneratedKeys="true" keyProperty="administratorsId">
+        insert into loc_administrators
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="administratorsName != null">administrators_name,</if>
+            <if test="administratorsPhone != null">administrators_phone,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="administratorsName != null">#{administratorsName},</if>
+            <if test="administratorsPhone != null">#{administratorsPhone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocAdministrators" parameterType="LocAdministrators">
+        update loc_administrators
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="administratorsName != null">administrators_name = #{administratorsName},</if>
+            <if test="administratorsPhone != null">administrators_phone = #{administratorsPhone},</if>
+        </trim>
+        where administrators_id = #{administratorsId}
+    </update>
+
+    <delete id="deleteLocAdministratorsById" parameterType="Integer">
+        delete from loc_administrators where administrators_id = #{administratorsId}
+    </delete>
+
+    <delete id="deleteLocAdministratorsByIds" parameterType="String">
+        delete from loc_administrators where administrators_id in 
+        <foreach item="administratorsId" collection="array" open="(" separator="," close=")">
+            #{administratorsId}
+        </foreach>
+    </delete>
+
+</mapper>

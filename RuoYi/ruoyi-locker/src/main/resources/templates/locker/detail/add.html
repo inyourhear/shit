@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增设备明细信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-detail-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备类型ID：</label>
+                <div class="col-sm-8">
+                    <input name="equipmentDetailTypeid" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备名：</label>
+                <div class="col-sm-8">
+                    <input name="equipmentDetailName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备编码：</label>
+                <div class="col-sm-8">
+                    <input name="equipmentDetailCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">固定资产号：</label>
+                <div class="col-sm-8">
+                    <input name="equipmentDetailAssetNumber" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">出厂编码：</label>
+                <div class="col-sm-8">
+                    <input name="equipmentDetailFactoryCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备所在格子编码：</label>
+                <div class="col-sm-8">
+                    <input name="equipmentDetailBoxCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备状态：</label>
+                <div class="col-sm-8">
+                    <select name="equipmentDetailState" class="form-control m-b" th:with="type=${@dict.getType('loc_equipment_detail_equipment_detail_state')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "locker/detail"
+        $("#form-detail-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-detail-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocOpenscopeMapper">
+    
+    <resultMap type="LocOpenscope" id="LocOpenscopeResult">
+        <result property="openscopeId"    column="openscope_id"    />
+        <result property="openscopeBoxCode"    column="openscope_box_code"    />
+        <result property="openscopeRuletableId"    column="openscope_ruletable_id"    />
+        <result property="openscopeRuleId"    column="openscope_rule_id"    />
+        <result property="openscopeInvalid"    column="openscope_invalid"    />
+    </resultMap>
+
+    <sql id="selectLocOpenscopeVo">
+        select openscope_id, openscope_box_code, openscope_ruletable_id, openscope_rule_id, openscope_invalid from loc_openscope
+    </sql>
+
+    <select id="selectLocOpenscopeList" parameterType="LocOpenscope" resultMap="LocOpenscopeResult">
+        <include refid="selectLocOpenscopeVo"/>
+        <where>  
+            <if test="openscopeId != null "> and openscope_id = #{openscopeId}</if>
+            <if test="openscopeBoxCode != null  and openscopeBoxCode != ''"> and openscope_box_code = #{openscopeBoxCode}</if>
+            <if test="openscopeRuletableId != null "> and openscope_ruletable_id = #{openscopeRuletableId}</if>
+            <if test="openscopeRuleId != null "> and openscope_rule_id = #{openscopeRuleId}</if>
+            <if test="openscopeInvalid != null "> and openscope_invalid = #{openscopeInvalid}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocOpenscopeById" parameterType="Long" resultMap="LocOpenscopeResult">
+        <include refid="selectLocOpenscopeVo"/>
+        where openscope_id = #{openscopeId}
+    </select>
+        
+    <insert id="insertLocOpenscope" parameterType="LocOpenscope" useGeneratedKeys="true" keyProperty="openscopeId">
+        insert into loc_openscope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openscopeBoxCode != null">openscope_box_code,</if>
+            <if test="openscopeRuletableId != null">openscope_ruletable_id,</if>
+            <if test="openscopeRuleId != null">openscope_rule_id,</if>
+            <if test="openscopeInvalid != null">openscope_invalid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openscopeBoxCode != null">#{openscopeBoxCode},</if>
+            <if test="openscopeRuletableId != null">#{openscopeRuletableId},</if>
+            <if test="openscopeRuleId != null">#{openscopeRuleId},</if>
+            <if test="openscopeInvalid != null">#{openscopeInvalid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocOpenscope" parameterType="LocOpenscope">
+        update loc_openscope
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="openscopeBoxCode != null">openscope_box_code = #{openscopeBoxCode},</if>
+            <if test="openscopeRuletableId != null">openscope_ruletable_id = #{openscopeRuletableId},</if>
+            <if test="openscopeRuleId != null">openscope_rule_id = #{openscopeRuleId},</if>
+            <if test="openscopeInvalid != null">openscope_invalid = #{openscopeInvalid},</if>
+        </trim>
+        where openscope_id = #{openscopeId}
+    </update>
+
+    <delete id="deleteLocOpenscopeById" parameterType="Long">
+        delete from loc_openscope where openscope_id = #{openscopeId}
+    </delete>
+
+    <delete id="deleteLocOpenscopeByIds" parameterType="String">
+        delete from loc_openscope where openscope_id in 
+        <foreach item="openscopeId" collection="array" open="(" separator="," close=")">
+            #{openscopeId}
+        </foreach>
+    </delete>
+
+</mapper>

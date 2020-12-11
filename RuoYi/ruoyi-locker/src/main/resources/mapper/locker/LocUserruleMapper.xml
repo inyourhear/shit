@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocUserruleMapper">
+    
+    <resultMap type="LocUserrule" id="LocUserruleResult">
+        <result property="userruleId"    column="userrule_id"    />
+        <result property="userruleUserId"    column="userrule_user_id"    />
+    </resultMap>
+
+    <sql id="selectLocUserruleVo">
+        select userrule_id, userrule_user_id from loc_userrule
+    </sql>
+
+    <select id="selectLocUserruleList" parameterType="LocUserrule" resultMap="LocUserruleResult">
+        <include refid="selectLocUserruleVo"/>
+        <where>  
+            <if test="userruleId != null "> and userrule_id = #{userruleId}</if>
+            <if test="userruleUserId != null "> and userrule_user_id = #{userruleUserId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocUserruleById" parameterType="Integer" resultMap="LocUserruleResult">
+        <include refid="selectLocUserruleVo"/>
+        where userrule_id = #{userruleId}
+    </select>
+        
+    <insert id="insertLocUserrule" parameterType="LocUserrule" useGeneratedKeys="true" keyProperty="userruleId">
+        insert into loc_userrule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userruleUserId != null">userrule_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userruleUserId != null">#{userruleUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocUserrule" parameterType="LocUserrule">
+        update loc_userrule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userruleUserId != null">userrule_user_id = #{userruleUserId},</if>
+        </trim>
+        where userrule_id = #{userruleId}
+    </update>
+
+    <delete id="deleteLocUserruleById" parameterType="Integer">
+        delete from loc_userrule where userrule_id = #{userruleId}
+    </delete>
+
+    <delete id="deleteLocUserruleByIds" parameterType="String">
+        delete from loc_userrule where userrule_id in 
+        <foreach item="userruleId" collection="array" open="(" separator="," close=")">
+            #{userruleId}
+        </foreach>
+    </delete>
+
+</mapper>

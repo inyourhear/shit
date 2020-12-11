@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocFixMapper">
+    
+    <resultMap type="LocFix" id="LocFixResult">
+        <result property="fixId"    column="fix_id"    />
+        <result property="fixReportPersonId"    column="fix_report_person_id"    />
+        <result property="fixEquipmentId"    column="fix_equipment_id"    />
+        <result property="fixRepairPersonId"    column="fix_repair_person_id"    />
+        <result property="fixReason"    column="fix_reason"    />
+        <result property="fixState"    column="fix_state"    />
+        <result property="fixReportTime"    column="fix_report_time"    />
+        <result property="fixRepairTime"    column="fix_repair_time"    />
+    </resultMap>
+
+    <sql id="selectLocFixVo">
+        select fix_id, fix_report_person_id, fix_equipment_id, fix_repair_person_id, fix_reason, fix_state, fix_report_time, fix_repair_time from loc_fix
+    </sql>
+
+    <select id="selectLocFixList" parameterType="LocFix" resultMap="LocFixResult">
+        <include refid="selectLocFixVo"/>
+        <where>  
+            <if test="fixId != null "> and fix_id = #{fixId}</if>
+            <if test="fixReportPersonId != null "> and fix_report_person_id = #{fixReportPersonId}</if>
+            <if test="fixEquipmentId != null "> and fix_equipment_id = #{fixEquipmentId}</if>
+            <if test="fixRepairPersonId != null "> and fix_repair_person_id = #{fixRepairPersonId}</if>
+            <if test="fixReason != null  and fixReason != ''"> and fix_reason = #{fixReason}</if>
+            <if test="fixState != null "> and fix_state = #{fixState}</if>
+            <if test="fixReportTime != null "> and fix_report_time = #{fixReportTime}</if>
+            <if test="fixRepairTime != null "> and fix_repair_time = #{fixRepairTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocFixById" parameterType="Integer" resultMap="LocFixResult">
+        <include refid="selectLocFixVo"/>
+        where fix_id = #{fixId}
+    </select>
+        
+    <insert id="insertLocFix" parameterType="LocFix" useGeneratedKeys="true" keyProperty="fixId">
+        insert into loc_fix
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fixReportPersonId != null">fix_report_person_id,</if>
+            <if test="fixEquipmentId != null">fix_equipment_id,</if>
+            <if test="fixRepairPersonId != null">fix_repair_person_id,</if>
+            <if test="fixReason != null">fix_reason,</if>
+            <if test="fixState != null">fix_state,</if>
+            <if test="fixReportTime != null">fix_report_time,</if>
+            <if test="fixRepairTime != null">fix_repair_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fixReportPersonId != null">#{fixReportPersonId},</if>
+            <if test="fixEquipmentId != null">#{fixEquipmentId},</if>
+            <if test="fixRepairPersonId != null">#{fixRepairPersonId},</if>
+            <if test="fixReason != null">#{fixReason},</if>
+            <if test="fixState != null">#{fixState},</if>
+            <if test="fixReportTime != null">#{fixReportTime},</if>
+            <if test="fixRepairTime != null">#{fixRepairTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocFix" parameterType="LocFix">
+        update loc_fix
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fixReportPersonId != null">fix_report_person_id = #{fixReportPersonId},</if>
+            <if test="fixEquipmentId != null">fix_equipment_id = #{fixEquipmentId},</if>
+            <if test="fixRepairPersonId != null">fix_repair_person_id = #{fixRepairPersonId},</if>
+            <if test="fixReason != null">fix_reason = #{fixReason},</if>
+            <if test="fixState != null">fix_state = #{fixState},</if>
+            <if test="fixReportTime != null">fix_report_time = #{fixReportTime},</if>
+            <if test="fixRepairTime != null">fix_repair_time = #{fixRepairTime},</if>
+        </trim>
+        where fix_id = #{fixId}
+    </update>
+
+    <delete id="deleteLocFixById" parameterType="Integer">
+        delete from loc_fix where fix_id = #{fixId}
+    </delete>
+
+    <delete id="deleteLocFixByIds" parameterType="String">
+        delete from loc_fix where fix_id in 
+        <foreach item="fixId" collection="array" open="(" separator="," close=")">
+            #{fixId}
+        </foreach>
+    </delete>
+
+</mapper>

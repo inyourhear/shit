@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocExchangeMapper">
+    
+    <resultMap type="LocExchange" id="LocExchangeResult">
+        <result property="exchangeId"    column="exchange_id"    />
+        <result property="exchangeBoxCode"    column="exchange_box_code"    />
+        <result property="exchangeUserId"    column="exchange_user_id"    />
+        <result property="exchangeGoods"    column="exchange_goods"    />
+        <result property="exchangeRandomcode"    column="exchange_randomcode"    />
+        <result property="exchangeTimesLimit"    column="exchange_times_limit"    />
+        <result property="exchangeCount"    column="exchange_count"    />
+    </resultMap>
+
+    <sql id="selectLocExchangeVo">
+        select exchange_id, exchange_box_code, exchange_user_id, exchange_goods, exchange_randomcode, exchange_times_limit, exchange_count from loc_exchange
+    </sql>
+
+    <select id="selectLocExchangeList" parameterType="LocExchange" resultMap="LocExchangeResult">
+        <include refid="selectLocExchangeVo"/>
+        <where>  
+            <if test="exchangeId != null "> and exchange_id = #{exchangeId}</if>
+            <if test="exchangeBoxCode != null  and exchangeBoxCode != ''"> and exchange_box_code = #{exchangeBoxCode}</if>
+            <if test="exchangeUserId != null "> and exchange_user_id = #{exchangeUserId}</if>
+            <if test="exchangeGoods != null  and exchangeGoods != ''"> and exchange_goods = #{exchangeGoods}</if>
+            <if test="exchangeRandomcode != null  and exchangeRandomcode != ''"> and exchange_randomcode = #{exchangeRandomcode}</if>
+            <if test="exchangeTimesLimit != null "> and exchange_times_limit = #{exchangeTimesLimit}</if>
+            <if test="exchangeCount != null "> and exchange_count = #{exchangeCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocExchangeById" parameterType="Long" resultMap="LocExchangeResult">
+        <include refid="selectLocExchangeVo"/>
+        where exchange_id = #{exchangeId}
+    </select>
+        
+    <insert id="insertLocExchange" parameterType="LocExchange" useGeneratedKeys="true" keyProperty="exchangeId">
+        insert into loc_exchange
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="exchangeBoxCode != null">exchange_box_code,</if>
+            <if test="exchangeUserId != null">exchange_user_id,</if>
+            <if test="exchangeGoods != null">exchange_goods,</if>
+            <if test="exchangeRandomcode != null">exchange_randomcode,</if>
+            <if test="exchangeTimesLimit != null">exchange_times_limit,</if>
+            <if test="exchangeCount != null">exchange_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="exchangeBoxCode != null">#{exchangeBoxCode},</if>
+            <if test="exchangeUserId != null">#{exchangeUserId},</if>
+            <if test="exchangeGoods != null">#{exchangeGoods},</if>
+            <if test="exchangeRandomcode != null">#{exchangeRandomcode},</if>
+            <if test="exchangeTimesLimit != null">#{exchangeTimesLimit},</if>
+            <if test="exchangeCount != null">#{exchangeCount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocExchange" parameterType="LocExchange">
+        update loc_exchange
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="exchangeBoxCode != null">exchange_box_code = #{exchangeBoxCode},</if>
+            <if test="exchangeUserId != null">exchange_user_id = #{exchangeUserId},</if>
+            <if test="exchangeGoods != null">exchange_goods = #{exchangeGoods},</if>
+            <if test="exchangeRandomcode != null">exchange_randomcode = #{exchangeRandomcode},</if>
+            <if test="exchangeTimesLimit != null">exchange_times_limit = #{exchangeTimesLimit},</if>
+            <if test="exchangeCount != null">exchange_count = #{exchangeCount},</if>
+        </trim>
+        where exchange_id = #{exchangeId}
+    </update>
+
+    <delete id="deleteLocExchangeById" parameterType="Long">
+        delete from loc_exchange where exchange_id = #{exchangeId}
+    </delete>
+
+    <delete id="deleteLocExchangeByIds" parameterType="String">
+        delete from loc_exchange where exchange_id in 
+        <foreach item="exchangeId" collection="array" open="(" separator="," close=")">
+            #{exchangeId}
+        </foreach>
+    </delete>
+
+</mapper>

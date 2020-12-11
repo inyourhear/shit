@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocMajorruleMapper">
+    
+    <resultMap type="LocMajorrule" id="LocMajorruleResult">
+        <result property="majorruleId"    column="majorrule_id"    />
+        <result property="majorruleMajor"    column="majorrule_major"    />
+    </resultMap>
+
+    <sql id="selectLocMajorruleVo">
+        select majorrule_id, majorrule_major from loc_majorrule
+    </sql>
+
+    <select id="selectLocMajorruleList" parameterType="LocMajorrule" resultMap="LocMajorruleResult">
+        <include refid="selectLocMajorruleVo"/>
+        <where>  
+            <if test="majorruleId != null "> and majorrule_id = #{majorruleId}</if>
+            <if test="majorruleMajor != null  and majorruleMajor != ''"> and majorrule_major = #{majorruleMajor}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocMajorruleById" parameterType="Long" resultMap="LocMajorruleResult">
+        <include refid="selectLocMajorruleVo"/>
+        where majorrule_id = #{majorruleId}
+    </select>
+        
+    <insert id="insertLocMajorrule" parameterType="LocMajorrule" useGeneratedKeys="true" keyProperty="majorruleId">
+        insert into loc_majorrule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="majorruleMajor != null and majorruleMajor != ''">majorrule_major,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="majorruleMajor != null and majorruleMajor != ''">#{majorruleMajor},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocMajorrule" parameterType="LocMajorrule">
+        update loc_majorrule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="majorruleMajor != null and majorruleMajor != ''">majorrule_major = #{majorruleMajor},</if>
+        </trim>
+        where majorrule_id = #{majorruleId}
+    </update>
+
+    <delete id="deleteLocMajorruleById" parameterType="Long">
+        delete from loc_majorrule where majorrule_id = #{majorruleId}
+    </delete>
+
+    <delete id="deleteLocMajorruleByIds" parameterType="String">
+        delete from loc_majorrule where majorrule_id in 
+        <foreach item="majorruleId" collection="array" open="(" separator="," close=")">
+            #{majorruleId}
+        </foreach>
+    </delete>
+
+</mapper>

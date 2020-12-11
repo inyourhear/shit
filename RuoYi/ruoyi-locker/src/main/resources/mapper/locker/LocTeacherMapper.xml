@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocTeacherMapper">
+    
+    <resultMap type="LocTeacher" id="LocTeacherResult">
+        <result property="id"    column="id"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="teacherName"    column="teacher_name"    />
+        <result property="teacherPhone"    column="teacher_phone"    />
+        <result property="teacherCollege"    column="teacher_college"    />
+    </resultMap>
+
+    <sql id="selectLocTeacherVo">
+        select id, teacher_id, teacher_name, teacher_phone, teacher_college from loc_teacher
+    </sql>
+
+    <select id="selectLocTeacherList" parameterType="LocTeacher" resultMap="LocTeacherResult">
+        <include refid="selectLocTeacherVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="teacherName != null  and teacherName != ''"> and teacher_name like concat('%', #{teacherName}, '%')</if>
+            <if test="teacherPhone != null  and teacherPhone != ''"> and teacher_phone = #{teacherPhone}</if>
+            <if test="teacherCollege != null  and teacherCollege != ''"> and teacher_college = #{teacherCollege}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocTeacherById" parameterType="Long" resultMap="LocTeacherResult">
+        <include refid="selectLocTeacherVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLocTeacher" parameterType="LocTeacher" useGeneratedKeys="true" keyProperty="id">
+        insert into loc_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="teacherName != null">teacher_name,</if>
+            <if test="teacherPhone != null">teacher_phone,</if>
+            <if test="teacherCollege != null">teacher_college,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="teacherName != null">#{teacherName},</if>
+            <if test="teacherPhone != null">#{teacherPhone},</if>
+            <if test="teacherCollege != null">#{teacherCollege},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocTeacher" parameterType="LocTeacher">
+        update loc_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="teacherName != null">teacher_name = #{teacherName},</if>
+            <if test="teacherPhone != null">teacher_phone = #{teacherPhone},</if>
+            <if test="teacherCollege != null">teacher_college = #{teacherCollege},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLocTeacherById" parameterType="Long">
+        delete from loc_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteLocTeacherByIds" parameterType="String">
+        delete from loc_teacher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

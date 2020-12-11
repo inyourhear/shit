@@ -1,0 +1,150 @@
+<html lang="zh-cmn-Hans">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/index/bootstrap-4.0.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/index/css/index-style.css">
+
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+      <a class="navbar-brand" href="#">智能储物柜管理系统</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">关于</a>
+          </li>    
+        </ul>
+      </div>  
+    </nav>
+
+
+    <div class="container">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="输入随机码打开箱子" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button">打开</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">所有箱子数</h4>
+          <p class="card-text" id="boxnum"></p>
+          <a href="#" class="card-link">申请使用</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">您需领用</h4>
+          <p class="card-text" id="receive"></p>
+          <a href="#" class="card-link">查看详情</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">您已拥有</h4>
+          <p class="card-text" id="boxbelong"></p>
+          <a href="#" class="card-link">查看详情</a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container" id="con">
+
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/index/bootstrap-4.0.0-dist/others/jquery-3.2.1.slim.min.js"></script>
+    <script src="/index/bootstrap-4.0.0-dist/others/popper-1.12.9.min.js"></script>
+    <script src="/index/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+
+    <script>
+      console.log($("#boxnum").text());
+
+      window.onload = function(){
+        getBoxBelong();
+        getBoxNum();
+        getReceiveNum();
+      }
+      
+      var user_id = sessionStorage.getItem("user_id");
+
+      function getBoxNum() {
+        $.ajax({
+          type: "post",
+          url: "/locker/allbox",
+          success: function (res){
+            if(res != null){
+              $("#boxnum").text(res);
+            }
+          }
+        })
+      }
+      
+      function getReceiveNum(user_id) {
+        $.ajax({
+          type: "post",
+          url: "/locker/receive/" + user_id,
+          success: function (res){
+            if(res != null){
+              $("#receive").text(res);
+            }
+          }
+        })
+      }
+
+      function getBoxBelong(user_id){
+        $.ajax({
+          type: "post",
+          url: "/locker/boxbelong/" + user_id,
+          success: function (res){
+            if(res != null){
+              $("#boxbelong").text(res);
+            }
+          }
+        })
+      }
+
+
+
+
+    //   buildHTML = function(tag, html, attrs) {
+    //   // you can skip html param
+    //   if (typeof (html) != 'string') {
+    //     attrs = html;
+    //     html = null;
+    //   }
+    //   var h = '<' + tag;
+    //   for (attr in attrs) {
+    //     if (attrs[attr] === false) continue;
+    //     h += ' ' + attr + '="' + attrs[attr] + '"';
+    //   }
+    //   return h += html ? ">" + html + "</" + tag + ">" : "/>";
+    // };
+
+
+    //   var input = buildHTML("button", {
+    //     class: "btn btn-primary",
+    //     id: "myInput"
+    //   });
+
+    //   $('#con').append(input);
+    </script>
+  </body>
+</html>

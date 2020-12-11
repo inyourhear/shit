@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.locker.mapper.LocOtherMapper">
+    
+    <resultMap type="LocOther" id="LocOtherResult">
+        <result property="otherId"    column="other_id"    />
+        <result property="otherName"    column="other_name"    />
+        <result property="otherPhone"    column="other_phone"    />
+        <result property="other job"    column="other_ job"    />
+    </resultMap>
+
+    <sql id="selectLocOtherVo">
+        select other_id, other_name, other_phone, other_ job from loc_other
+    </sql>
+
+    <select id="selectLocOtherList" parameterType="LocOther" resultMap="LocOtherResult">
+        <include refid="selectLocOtherVo"/>
+        <where>  
+            <if test="otherId != null "> and other_id = #{otherId}</if>
+            <if test="otherName != null  and otherName != ''"> and other_name like concat('%', #{otherName}, '%')</if>
+            <if test="otherPhone != null  and otherPhone != ''"> and other_phone = #{otherPhone}</if>
+            <if test="other job != null  and other job != ''"> and other_ job = #{other job}</if>
+        </where>
+    </select>
+    
+    <select id="selectLocOtherById" parameterType="Integer" resultMap="LocOtherResult">
+        <include refid="selectLocOtherVo"/>
+        where other_id = #{otherId}
+    </select>
+        
+    <insert id="insertLocOther" parameterType="LocOther" useGeneratedKeys="true" keyProperty="otherId">
+        insert into loc_other
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="otherName != null">other_name,</if>
+            <if test="otherPhone != null">other_phone,</if>
+            <if test="other job != null">other_ job,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="otherName != null">#{otherName},</if>
+            <if test="otherPhone != null">#{otherPhone},</if>
+            <if test="other job != null">#{other job},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLocOther" parameterType="LocOther">
+        update loc_other
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="otherName != null">other_name = #{otherName},</if>
+            <if test="otherPhone != null">other_phone = #{otherPhone},</if>
+            <if test="other job != null">other_ job = #{other job},</if>
+        </trim>
+        where other_id = #{otherId}
+    </update>
+
+    <delete id="deleteLocOtherById" parameterType="Integer">
+        delete from loc_other where other_id = #{otherId}
+    </delete>
+
+    <delete id="deleteLocOtherByIds" parameterType="String">
+        delete from loc_other where other_id in 
+        <foreach item="otherId" collection="array" open="(" separator="," close=")">
+            #{otherId}
+        </foreach>
+    </delete>
+
+</mapper>
